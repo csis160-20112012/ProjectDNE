@@ -136,7 +136,7 @@ public class Game extends JPanel {
     
     
     
-    //player one
+    //player one and two
 	private static final int PlAYER_VY = 8;
 	private static final int PlAYERONE_X = 10;
 	private static final int PlAYERONE_Y = 250;

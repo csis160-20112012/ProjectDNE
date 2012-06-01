@@ -16,7 +16,7 @@ import java.util.TimerTask;
 
 public class Game extends JPanel {
 	
-	
+		
 	// animation constants and objects
 	private static final int FRAMES_PER_SECOND = 30;
 	private static final int MS_TO_WAIT = 1000 / FRAMES_PER_SECOND;
@@ -86,6 +86,20 @@ public class Game extends JPanel {
             		// beep after every paddle hit
             		Toolkit.getDefaultToolkit().beep();
             	}
+            
+          //check collision with player two
+            if( playerTwo.contains(ballX, ballminY) || playerTwo.contains(ballX, ballmaxY) ||
+            		playerTwo.contains(ballminX, ballY) || playerTwo.contains(ballmaxX, ballY) ) 
+            	{
+            		ball.setY(playerTwo.getY() - ball.getWidth()/2);
+            		ball.setVY(-ball.getVY());
+            		
+            		ball.setX(playerTwo.getX() - ball.getWidth()/2);
+            		ball.setVX(-ball.getVX());
+
+            		// beep after every paddle hit
+            		Toolkit.getDefaultToolkit().beep();
+            	}
 
             repaint();
         }
@@ -98,7 +112,7 @@ public class Game extends JPanel {
 	
 	//ball constants and object
     private static final int INITIAL_Y_VELOCITY = 4;
-    private static final int INITIAL_X_VELOCITY = 25;
+    private static final int INITIAL_X_VELOCITY = 15;
     private static final double ACCELERATION = 0.2;
     private Ball ball = new Ball(200, 0, INITIAL_X_VELOCITY, INITIAL_Y_VELOCITY, 0, ACCELERATION, 7, 7);
 	
@@ -114,6 +128,7 @@ public class Game extends JPanel {
         g.fillOval(upperLeftX, upperLeftY, ball.getWidth(), ball.getHeight());
         
         playerOne.paint(g);
+        playerTwo.paint(g);
        
 	}
     
@@ -122,11 +137,14 @@ public class Game extends JPanel {
     
     
     //player one
-	private static final int PlAYERONE_VY = 8;
+	private static final int PlAYER_VY = 8;
 	private static final int PlAYERONE_X = 10;
-	private static final int PlAYERONE_Y = 200;
+	private static final int PlAYERONE_Y = 250;
+	private static final int PlAYERTWO_X = 1170;
+	private static final int PlAYERTWO_Y = 250;
 	
-	private PlayerOne playerOne = new PlayerOne(PlAYERONE_X, PlAYERONE_Y, 0, 0);
+	private Player playerOne = new Player(PlAYERONE_X, PlAYERONE_Y, 0, 0);
+	private Player playerTwo = new Player(PlAYERTWO_X, PlAYERTWO_Y, 0, 0);
 	
 	
 	
@@ -139,10 +157,10 @@ public class Game extends JPanel {
 		public void keyPressed(KeyEvent e) {
 
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            	playerOne.setVY(-PlAYERONE_VY);
+            	playerOne.setVY(-PlAYER_VY);
             }
             else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            	playerOne.setVY(PlAYERONE_VY);
+            	playerOne.setVY(PlAYER_VY);
             }
             else if (e.getKeyCode() == KeyEvent.VK_R) {
             	playerOne.setX(PlAYERONE_X);
@@ -150,7 +168,7 @@ public class Game extends JPanel {
             	playerOne.setVY(0);
             }
             
-            playerOne.movePlayerOne();
+            playerOne.movePlayer();
 		}
 
 		@Override

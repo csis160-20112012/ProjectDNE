@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
-public class PlayerOne {
+public class Player {
 	
 	//position of the player
 	private int x;
@@ -27,7 +27,7 @@ public class PlayerOne {
 	
 	
 	//default constructor
-	public PlayerOne(int x, int y, int vx, int vy, int width, int height) {
+	public Player(int x, int y, int vx, int vy, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.vx = vx;
@@ -37,7 +37,7 @@ public class PlayerOne {
 	}
 	
 	//constructor with no dimension values
-	public PlayerOne(int x, int y, int vx, int vy) {
+	public Player(int x, int y, int vx, int vy) {
 		this.x = x;
 		this.y = y;
 		this.vx = vx;
@@ -49,7 +49,7 @@ public class PlayerOne {
 	
 	
 	//update player's position
-	public void movePlayerOne() {
+	public void movePlayer() {
 		this.x += vx;
 		this.y += vy;
 	}
@@ -58,7 +58,7 @@ public class PlayerOne {
 	
 	
 		
-	//paint player one
+	//paint player
 	public void paint(Graphics g) {
 		g.setColor(color);
 		g.fillRect(x, y, width, height);

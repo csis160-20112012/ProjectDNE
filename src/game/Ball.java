@@ -25,8 +25,7 @@ public class Ball {
 	
 
 	// default constructor
-	public Ball(double x, double y, double vx, double vy, double ax, double ay,
-			int width, int height) {
+	public Ball(double x, double y, double vx, double vy, double ax, double ay, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.vx = vx;

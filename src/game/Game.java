@@ -1,6 +1,9 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -9,6 +12,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,9 +32,10 @@ public class Game extends JPanel {
 	private class AnimationUpdater extends TimerTask {
 
 		public void run() {
-
+			
+			if (canIStart==true) {
 			ball.moveBall();
-
+			
 			// walls dimensions
 			int minY = ball.getHeight() / 2;
 			int maxY = getHeight() - (ball.getHeight() / 2);
@@ -65,13 +70,18 @@ public class Game extends JPanel {
 				ball.setVX(-ball.getVX());
 			}
 
+			
+			
+			Random YRandomizer = new Random();
+			int RandomY = YRandomizer.nextInt(10) - 5; 
+			
 			// check collision with player one
 			if (playerOne.contains(ballX, ballminY)
 					|| playerOne.contains(ballX, ballmaxY)
 					|| playerOne.contains(ballminX, ballY)
 					|| playerOne.contains(ballmaxX, ballY)) {
 				//ball.setY(playerOne.getY() - ball.getWidth() / 2);
-				ball.setVY(ball.getVY());
+				ball.setVY(ball.getVY() + RandomY);
 
 				//ball.setX(playerOne.getX() - ball.getWidth() / 2);
 				ball.setVX(-ball.getVX());
@@ -86,7 +96,7 @@ public class Game extends JPanel {
 					|| playerTwo.contains(ballminX, ballY)
 					|| playerTwo.contains(ballmaxX, ballY)) {
 				//ball.setY(playerTwo.getY() - ball.getWidth() / 2);
-				ball.setVY(ball.getVY());
+				ball.setVY(ball.getVY() + RandomY);
 
 				//ball.setX(playerTwo.getX() - ball.getWidth() / 2);
 				ball.setVX(-ball.getVX());
@@ -97,19 +107,33 @@ public class Game extends JPanel {
 
 			repaint();
 		}
+		}
 
 	}
 
 	// ball constants and object
 	private static final int INITIAL_Y_VELOCITY = 1;
-	private static final int INITIAL_X_VELOCITY = 15;
+	private static final int INITIAL_X_VELOCITY = 10;
 	private static final double ACCELERATION = 0;
-	private Ball ball = new Ball(200, 0, INITIAL_X_VELOCITY,
-			INITIAL_Y_VELOCITY, 0, ACCELERATION, 10, 10);
+	private Ball ball = new Ball(200, 0, INITIAL_X_VELOCITY, INITIAL_Y_VELOCITY, 0, ACCELERATION, 10, 10);
 
+	
+	public boolean canIStart = true;
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+			
+		
+		if (ball.getX() > getWidth() - 15) {		
+			g.setFont (new Font ("Monospaced", Font.BOLD,24));
+			g.drawString("Player one won. Player two sucks.", 200, getHeight() / 2);
+			canIStart = false;
+		} else if (ball.getX() < 0 + 15) {
+			g.setFont (new Font ("Monospaced",Font.BOLD,24));
+			g.drawString("Player two lost. Player one is allowed to make fun of player two.", 200, getHeight() / 2);
+			canIStart = false;
+		}
+		else {
 		g.setColor(Color.RED);
 		g.clearRect(0, 0, getWidth(), getHeight());
 
@@ -117,13 +141,19 @@ public class Game extends JPanel {
 		int upperLeftY = (int) (ball.getY() - ball.getHeight() / 2);
 		g.fillOval(upperLeftX, upperLeftY, ball.getWidth(), ball.getHeight());
 
-		playerOne.paint(g);
+		
+		playerOne.paint(g);		
 		playerTwo.paint(g);
-
+		
+		g.setColor(Color.WHITE);
+		g.drawString("1", playerOne.getX() + 1, playerOne.getY() + 50);
+		g.drawString("2", playerTwo.getX() + 1, playerTwo.getY() + 50);
+		}
+		
 	}
 
 	// player one and two
-	private static final int PlAYER_VY = 40;
+	private static final int PlAYER_VY = 30;
 	private static final int PlAYERONE_X = 40;
 	private static final int PlAYERONE_Y = 250;
 	private static final int PlAYERTWO_X = 1130;
@@ -135,14 +165,14 @@ public class Game extends JPanel {
 	// key listener
 	private class GameKeysListener implements KeyListener {
 
-		// move player one
+		// move player one and two
 		@Override
 		public void keyPressed(KeyEvent e) {
 
-			if (e.getKeyCode() == KeyEvent.VK_UP) {
+			if (e.getKeyCode() == KeyEvent.VK_W) {
 				playerOne.setVY(-PlAYER_VY);
 				playerOne.movePlayer();
-			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			} else if (e.getKeyCode() == KeyEvent.VK_S) {
 				playerOne.setVY(PlAYER_VY);
 				playerOne.movePlayer();
 			} else if (e.getKeyCode() == KeyEvent.VK_R) {
@@ -152,10 +182,10 @@ public class Game extends JPanel {
 				playerOne.movePlayer();
 			}
 
-			if (e.getKeyCode() == KeyEvent.VK_W) {
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				playerTwo.setVY(-PlAYER_VY);
 				playerTwo.movePlayer();
-			} else if (e.getKeyCode() == KeyEvent.VK_S) {
+			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 				playerTwo.setVY(PlAYER_VY);
 				playerTwo.movePlayer();
 			} else if (e.getKeyCode() == KeyEvent.VK_R) {
@@ -164,7 +194,24 @@ public class Game extends JPanel {
 				playerTwo.setVY(0);
 				playerTwo.movePlayer();
 			}
-
+		
+		// check position limitations for the 2 players
+			if (playerOne.getY() < 0) {
+				playerOne.setY(0);				
+			}
+			
+			if (playerTwo.getY() < 0) {
+				playerTwo.setY(0);				
+			}
+			
+			if (playerOne.getY() > getHeight() - playerOne.getHeight()) {
+				playerOne.setY(getHeight() - playerOne.getHeight());				
+			}
+			
+			if (playerTwo.getY() > getHeight() - playerTwo.getHeight()) {
+				playerTwo.setY(getHeight() - playerTwo.getHeight());				
+			}
+			
 		}
 
 		@Override
@@ -186,21 +233,5 @@ public class Game extends JPanel {
 		addKeyListener(new GameKeysListener());
 	}
 
-	public static void main(String[] args) {
-
-		JFrame window = new JFrame();
-
-		Game panel = new Game();
-
-		window.add(panel);
-		window.setSize(1200, 600);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setBackground(Color.BLACK);
-		window.setResizable(false);
-		window.setVisible(true);
-
-		panel.start();
-
-	}
 
 }

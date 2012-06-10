@@ -17,7 +17,6 @@ public class GameMain {
 		gameWindow.add(newGame);
 		gameWindow.setSize(1200, 600);
 		gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameWindow.getContentPane().setBackground(Color.BLACK);
 		gameWindow.setResizable(false);
 		gameWindow.setVisible(true);
 		

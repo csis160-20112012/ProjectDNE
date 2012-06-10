@@ -5,16 +5,12 @@ public class Ball {
 	
 
 	// position of the ball
-	private double x;
-	private double y;
+	private int x;
+	private int y;
 
 	// velocity of the ball
-	private double vx;
-	private double vy;
-
-	// acceleration of the ball
-	private double ax;
-	private double ay;
+	private int vx;
+	private int vy;
 
 	// dimensions of the ball
 	private int width = 8;
@@ -25,25 +21,21 @@ public class Ball {
 	
 
 	// default constructor
-	public Ball(double x, double y, double vx, double vy, double ax, double ay, int width, int height) {
+	public Ball(int x, int y, int vx, int vy, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.vx = vx;
 		this.vy = vy;
-		this.ax = ax;
-		this.ay = ay;
 		this.width = width;
 		this.height = height;
 	}
 
 	// constructor with no dimension values
-	public Ball(double x, double y, double vx, double vy, double ax, double ay) {
+	public Ball(int x, int y, int vx, int vy) {
 		this.x = x;
 		this.y = y;
 		this.vx = vx;
 		this.vy = vy;
-		this.ax = ax;
-		this.ay = ay;
 	}
 
 	
@@ -54,9 +46,6 @@ public class Ball {
 	public void moveBall() {
 		this.x += vx;
 		this.y += vy;
-
-		this.vx += ax;
-		this.vy += ay;
 	}
 
 	
@@ -72,28 +61,20 @@ public class Ball {
 		return width;
 	}
 
-	public double getX() {
+	public int getX() {
 		return x;
 	}
 
-	public double getY() {
+	public int getY() {
 		return y;
 	}
 
-	public double getVX() {
+	public int getVX() {
 		return vx;
 	}
 
-	public double getVY() {
+	public int getVY() {
 		return vy;
-	}
-
-	public double getAX() {
-		return ax;
-	}
-
-	public double getAY() {
-		return ay;
 	}
 
 	
@@ -109,28 +90,20 @@ public class Ball {
 		this.width = width;
 	}
 
-	public void setX(double x) {
+	public void setX(int x) {
 		this.x = x;
 	}
 
-	public void setY(double y) {
+	public void setY(int y) {
 		this.y = y;
 	}
 
-	public void setVX(double vx) {
+	public void setVX(int vx) {
 		this.vx = vx;
 	}
 
-	public void setVY(double vy) {
+	public void setVY(int vy) {
 		this.vy = vy;
-	}
-
-	public void setAX(double ax) {
-		this.ax = ax;
-	}
-
-	public void setAY(double ay) {
-		this.ay = ay;
 	}
 
 	

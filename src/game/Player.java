@@ -68,7 +68,7 @@ public class Player {
 	
 	
 	
-	
+	// used to check collision with the player
 	public boolean contains(int x, int y) {
 		int offsetX = x - getX();
 		int offsetY = y - getY();

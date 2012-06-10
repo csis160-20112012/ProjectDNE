@@ -41,7 +41,7 @@ public class Game extends JPanel {
 	private static final int PLAYER_VY = 30;
 	private static final int PLAYERONE_X = 40;
 	private static final int PLAYERONE_Y = 250;
-	private static final int PLAYERTWO_X = 1000; //remember to change
+	private static final int PLAYERTWO_X = 1150; //remember to change
 	private static final int PLAYERTWO_Y = 250;
 
 	private Player playerOne = new Player(PLAYERONE_X, PLAYERONE_Y, 0, 0);

@@ -1,20 +1,25 @@
 package game;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.Graphics;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
 public class Game extends JPanel {
 
@@ -24,16 +29,22 @@ public class Game extends JPanel {
 
 	private Timer animationTimer = new Timer("Ball Animation");
 	private TimerTask animationTask = new AnimationUpdater();
+	
+	private int scoreOne = 0;
+	private int scoreTwo = 0;
 
 	public void start() {
 		animationTimer.schedule(animationTask, 0, MS_TO_WAIT);
 	}
 
 	private class AnimationUpdater extends TimerTask {
-
+		
+		 
 		public void run() {
 			
-			if (canIStart==true) {
+			
+			
+			if (listenEvent == 2) {
 			ball.moveBall();
 			
 			// walls dimensions
@@ -108,7 +119,7 @@ public class Game extends JPanel {
 			repaint();
 		}
 		}
-
+		
 	}
 
 	// ball constants and object
@@ -120,36 +131,104 @@ public class Game extends JPanel {
 	
 	public boolean canIStart = true;
 	
+	private BufferedImage image;
+	private BufferedImage image2;
+	
+
+	private int listenEvent = 1;
+
+	
+	
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-			
 		
-		if (ball.getX() > getWidth() - 15) {		
+		
+		
+			
+		if (listenEvent == 1) {
+			try {                
+	          image = ImageIO.read(new File("main1.png"));
+	       } catch (IOException ex) {
+	            // handle exception...
+	       }
+		
+			
+			g.drawImage(image, 0, 0, null);
+			
+			try {                
+		          image2 = ImageIO.read(new File("background.png"));
+		      } catch (IOException ex) {
+		           // handle exception...
+		       }
+			
+			//g.drawImage(image2, 0, 0, null);
+			
+		}
+		
+
+		
+		
+		if (listenEvent == 2) { 
+		//g.setColor(Color.GRAY);	
+		//g.fillRect(0, 0, getWidth(), getHeight());
+			
+			g.drawImage(image2, 0, 0, null);
+		
+			if (ball.getX() > getWidth() - 15) {
 			g.setFont (new Font ("Monospaced", Font.BOLD,24));
 			g.drawString("Player one won. Player two sucks.", 200, getHeight() / 2);
-			canIStart = false;
-		} else if (ball.getX() < 0 + 15) {
+			g.drawString("Press ENTER to restart.", 200, getHeight() / 2 + 50);
+			listenEvent = 3;
+			scoreOne++;
+			}
+			else if (ball.getX() < 0 + 15) {
 			g.setFont (new Font ("Monospaced",Font.BOLD,24));
 			g.drawString("Player two lost. Player one is allowed to make fun of player two.", 200, getHeight() / 2);
-			canIStart = false;
-		}
-		else {
-		g.setColor(Color.RED);
-		g.clearRect(0, 0, getWidth(), getHeight());
+			g.drawString("Press ENTER to restart.", 200, getHeight() / 2 + 50);
+			listenEvent = 3;
+			scoreTwo++;
+			} 
+			else {
+				g.setColor(Color.RED);
+		
+				int upperLeftX = (int) (ball.getX() - ball.getWidth() / 2);
+				int upperLeftY = (int) (ball.getY() - ball.getHeight() / 2);
+				g.fillOval(upperLeftX, upperLeftY, ball.getWidth(), ball.getHeight());
 
-		int upperLeftX = (int) (ball.getX() - ball.getWidth() / 2);
-		int upperLeftY = (int) (ball.getY() - ball.getHeight() / 2);
-		g.fillOval(upperLeftX, upperLeftY, ball.getWidth(), ball.getHeight());
-
 		
-		playerOne.paint(g);		
-		playerTwo.paint(g);
+				playerOne.paint(g);		
+				playerTwo.paint(g);
 		
-		g.setColor(Color.WHITE);
-		g.drawString("1", playerOne.getX() + 1, playerOne.getY() + 50);
-		g.drawString("2", playerTwo.getX() + 1, playerTwo.getY() + 50);
+				g.setColor(Color.WHITE);
+				g.setFont (new Font ("Monospaced", Font.BOLD, 10));
+				g.drawString(">", playerOne.getX() + 1, playerOne.getY() + 50);
+				g.drawString("<", playerTwo.getX() + 1, playerTwo.getY() + 50);
+		
+				g.setColor(Color.RED);
+				g.setFont (new Font ("Monospaced", Font.BOLD, 15));
+				g.drawString("" + scoreOne, 10, 15);
+				g.drawString("" + scoreTwo, getWidth() - 20, 15);
+		
+			}
 		}
 		
+		if (listenEvent == 3 && ball.getVX() < 0) {
+			ball.setX(getWidth() / 2 + 400);
+			ball.setY(getHeight() / 2);
+			ball.setVY(1);
+		}
+		
+		if (listenEvent == 3 && ball.getVX() > 0) {
+			ball.setX(getWidth() / 2 - 400);
+			ball.setY(getHeight() / 2);
+			ball.setVY(1);
+		}
+		
+		
+		
+		
+		 
 	}
 
 	// player one and two
@@ -162,13 +241,26 @@ public class Game extends JPanel {
 	private Player playerOne = new Player(PlAYERONE_X, PlAYERONE_Y, 0, 0);
 	private Player playerTwo = new Player(PlAYERTWO_X, PlAYERTWO_Y, 0, 0);
 
+	
+	
 	// key listener
 	private class GameKeysListener implements KeyListener {
 
+		
 		// move player one and two
 		@Override
 		public void keyPressed(KeyEvent e) {
 
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				listenEvent = 2;
+			}
+			
+			
+			
+			
+			// move player one and two
+			
+			
 			if (e.getKeyCode() == KeyEvent.VK_W) {
 				playerOne.setVY(-PlAYER_VY);
 				playerOne.movePlayer();
@@ -182,10 +274,10 @@ public class Game extends JPanel {
 				playerOne.movePlayer();
 			}
 
-			if (e.getKeyCode() == KeyEvent.VK_UP) {
+			if (e.getKeyCode() == KeyEvent.VK_O) {
 				playerTwo.setVY(-PlAYER_VY);
 				playerTwo.movePlayer();
-			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			} else if (e.getKeyCode() == KeyEvent.VK_L) {
 				playerTwo.setVY(PlAYER_VY);
 				playerTwo.movePlayer();
 			} else if (e.getKeyCode() == KeyEvent.VK_R) {

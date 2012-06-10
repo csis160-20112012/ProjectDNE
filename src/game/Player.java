@@ -17,7 +17,7 @@ public class Player {
 	private int vy;
 
 	// player color
-	private Color color = Color.BLUE;
+	private Color color = Color.BLACK;
 
 	// player dimensions
 	private int width = 10;

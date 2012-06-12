@@ -88,7 +88,16 @@ public class Game extends JPanel {
 
 	
 	
-	
+	/**
+	 * This class updates the various attributes in
+	 * the game, such as the position or dimension
+	 * of the players, or the direction of the ball.
+	 * Moreover keeps track of the relation among 
+	 * different object (such as collisions among 
+	 * the ball and the players.
+	 * It also randomly generates three different 
+	 * bonuses.
+	 */
 	private class AnimationUpdater extends TimerTask {
 		
 		public void run() {
@@ -231,7 +240,10 @@ public class Game extends JPanel {
 	
 
 	
-	
+	/**
+	 * Paints the different elements of the game
+	 * and resets them at the end of the round.
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
@@ -324,7 +336,10 @@ public class Game extends JPanel {
 	
 	
 	
-
+	/**
+	 * This class is used to make the program respond
+	 * to user input driven events, such as player movements.
+	 */
 	// key listener
 	private class GameKeysListener implements KeyListener {
 

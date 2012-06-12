@@ -1,3 +1,8 @@
+/**
+ * Holds the bonuses general attributes
+ */
+
+
 package game;
 
 

@@ -1,3 +1,8 @@
+/**
+ * Represents both player one and player two in the game
+ */
+
+
 package game;
 
 

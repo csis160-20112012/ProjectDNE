@@ -1,3 +1,8 @@
+/**
+ * Represents the ball in the game
+ */
+
+
 package game;
 
 

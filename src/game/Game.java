@@ -23,6 +23,13 @@ import javax.swing.JPanel;
 public class Game extends JPanel {
 
 	
+	/**
+	 * These that follow are a series of variables and
+	 * objects used to handle elements and events of the
+	 * game
+	 */
+	
+	
 	// animation constants and objects
 	private static final int FRAMES_PER_SECOND = 60;
 	private static final int MS_TO_WAIT = 1000 / FRAMES_PER_SECOND;
@@ -112,7 +119,7 @@ public class Game extends JPanel {
 			
 			
 				// walls restrictions
-				int minY = ball.getHeight() / 2;
+				int minY = ball.getHeight() / 2 + 30;
 				int maxY = getHeight() - (ball.getHeight() / 2);
 
 				int minX = 0 + ball.getWidth() / 2;
@@ -265,11 +272,11 @@ public class Game extends JPanel {
 				}
 				
 				// check position limitations for the 2 players
-				if (playerOne.getY() < 0) {
-					playerOne.setY(0);				
+				if (playerOne.getY() < 30) {
+					playerOne.setY(31);				
 				} 
-				else if (playerTwo.getY() < 0) {
-					playerTwo.setY(0);				
+				else if (playerTwo.getY() < 30) {
+					playerTwo.setY(31);				
 				}
 				else if (playerOne.getY() > getHeight() - playerOne.getHeight()) {
 					playerOne.setY(getHeight() - playerOne.getHeight());				
@@ -335,6 +342,9 @@ public class Game extends JPanel {
 				gameStatus = GameStatus.RESET;
 				scoreTwo++;
 			} else {
+				g.setColor(Color.WHITE);
+				g.drawLine(0, 30, getWidth(), 30);
+				
 				g.setColor(Color.RED);		
 				g.fillOval(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
 		

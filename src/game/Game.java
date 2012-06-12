@@ -33,7 +33,7 @@ public class Game extends JPanel {
 	
 	// ball constants and object
 	private static final int Y_VELOCITY = 1;
-	private static final int X_VELOCITY = 5;
+	private static final int X_VELOCITY = 7;
 	private Ball ball = new Ball(200, 200, X_VELOCITY, Y_VELOCITY, 10, 10);
 	
 	
@@ -42,7 +42,7 @@ public class Game extends JPanel {
 	private int PLAYER_TWO_VELOCITY = 30;
 	private static final int PLAYERONE_X = 40;
 	private static final int PLAYERONE_Y = 250;
-	private static final int PLAYERTWO_X = 1150; //remember to change
+	private static final int PLAYERTWO_X = 1150;
 	private static final int PLAYERTWO_Y = 250;
 
 	private Player playerOne = new Player(PLAYERONE_X, PLAYERONE_Y, 0, 0);
@@ -57,7 +57,7 @@ public class Game extends JPanel {
 	
 	
 	// initialize bonus object + number of hits
-	private Bonus bonus = new Bonus(0, 0, Color.WHITE, 0, true);
+	private Bonus bonus = new Bonus(0, 0, Color.BLACK, 0, true);
 	private Random randomizeBonus = new Random();
 	
 	private String bonusMessage = "";
@@ -259,7 +259,7 @@ public class Game extends JPanel {
 			g.drawImage(background, 0, 0, null);
 		
 			if (ball.getX() > getWidth() - 15) {
-				g.setFont(new Font ("Monospaced", Font.BOLD,24));
+				g.setFont(new Font ("Monospaced", Font.BOLD, 24));
 				g.setColor(Color.BLACK);
 				g.drawString("Player one scored!", 200, getHeight() / 2);
 				g.drawString("Press ENTER to play again (attention player two).", 200, getHeight() / 2 + 50);
@@ -268,7 +268,7 @@ public class Game extends JPanel {
 				scoreOne++;
 			} 
 			else if (ball.getX() < 0 + 15) {
-				g.setFont(new Font ("Monospaced", Font.BOLD,24));
+				g.setFont(new Font ("Monospaced", Font.BOLD, 24));
 				g.setColor(Color.BLACK);
 				g.drawString("Player two scored!", 200, getHeight() / 2);
 				g.drawString("Press ENTER to play again (attention player one).", 200, getHeight() / 2 + 50);

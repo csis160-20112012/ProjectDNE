@@ -2,6 +2,7 @@ package game;
 
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 
@@ -57,6 +58,9 @@ public class Bonus {
 	public void paint(Graphics g) {
 		g.setColor(color);
 		g.fillRect(x, y, width, height);
+		g.setColor(color.WHITE);
+		g.setFont(new Font ("Monospaced", Font.BOLD, 40));
+		g.drawString("?", x + 40, y + 60);
 	}
 	
 	

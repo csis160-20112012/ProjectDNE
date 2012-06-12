@@ -38,8 +38,14 @@ public class Game extends JPanel {
 	
 	
 	// player one and two constants and objects
-	private int PLAYER_ONE_VELOCITY = 30;
-	private int PLAYER_TWO_VELOCITY = 30;
+	private int keyEventContainerOneXY = 0;
+	private int keyEventContainerTwoXY = 0;
+	private int moveOne = 0;
+	private int moveTwo = 0;
+	private int upOrDownOne = 0;
+	private int upOrDownTwo = 0;
+	private int PLAYER_ONE_VELOCITY = 7;
+	private int PLAYER_TWO_VELOCITY = 7;
 	private static final int PLAYERONE_X = 40;
 	private static final int PLAYERONE_Y = 250;
 	private static final int PLAYERTWO_X = 1150;
@@ -191,6 +197,7 @@ public class Game extends JPanel {
 						|| 	bonus.contains(ballmaxX, ball.getY())) {
 							bonus.setIsHitted(true);
 							whichPlayer = lastPlayer;
+							hitsWithPlayers = 1;
 					}
 				}
 				
@@ -209,11 +216,11 @@ public class Game extends JPanel {
 				// player velocity bonus
 				if (bonus.getType() == 2 && bonus.getIsHitted() == true) {
 					if (whichPlayer == 1) {
-						PLAYER_ONE_VELOCITY = 60;
+						PLAYER_ONE_VELOCITY = 12;
 						bonusMessage = "Player One is now faster!";
 					}
 					if (whichPlayer == 2) {
-						PLAYER_TWO_VELOCITY = 60;
+						PLAYER_TWO_VELOCITY = 12;
 						bonusMessage = "Player Two is now faster!";
 					}
 				}
@@ -231,6 +238,46 @@ public class Game extends JPanel {
 					}
 				}
 				
+				
+				// move players
+				if (moveOne < keyEventContainerOneXY && upOrDownOne == 1) {
+					playerOne.setVY(-PLAYER_ONE_VELOCITY);
+					playerOne.movePlayer();
+					moveOne++;
+				}
+				
+				if (moveOne < keyEventContainerOneXY && upOrDownOne == 2) {
+					playerOne.setVY(PLAYER_ONE_VELOCITY);
+					playerOne.movePlayer();
+					moveOne++;
+				}
+				
+				if (moveTwo < keyEventContainerTwoXY && upOrDownTwo == 1) {
+					playerTwo.setVY(-PLAYER_TWO_VELOCITY);
+					playerTwo.movePlayer();
+					moveTwo++;
+				}
+				
+				if (moveTwo < keyEventContainerTwoXY && upOrDownTwo == 2) {
+					playerTwo.setVY(PLAYER_TWO_VELOCITY);
+					playerTwo.movePlayer();
+					moveTwo++;
+				}
+				
+				// check position limitations for the 2 players
+				if (playerOne.getY() < 0) {
+					playerOne.setY(0);				
+				} 
+				else if (playerTwo.getY() < 0) {
+					playerTwo.setY(0);				
+				}
+				else if (playerOne.getY() > getHeight() - playerOne.getHeight()) {
+					playerOne.setY(getHeight() - playerOne.getHeight());				
+				}
+				else if (playerTwo.getY() > getHeight() - playerTwo.getHeight()) {
+					playerTwo.setY(getHeight() - playerTwo.getHeight());				
+				}
+				
 
 				repaint();
 			}
@@ -238,7 +285,7 @@ public class Game extends JPanel {
 	}
 
 	
-
+	 
 	
 	/**
 	 * Paints the different elements of the game
@@ -248,7 +295,7 @@ public class Game extends JPanel {
 		super.paintComponent(g);
 		
 		
-		// initialize images and draw menu
+		// initialise images and draw menu
 		if (gameStatus == GameStatus.MENU) {
 			try {                
 				menu = ImageIO.read(new File("main1.png"));
@@ -325,8 +372,8 @@ public class Game extends JPanel {
 		if (gameStatus == GameStatus.RESET) {
 			playerOne.setHeight(100);
 			playerTwo.setHeight(100);
-			PLAYER_ONE_VELOCITY = 30;
-			PLAYER_TWO_VELOCITY = 30;
+			PLAYER_ONE_VELOCITY = 7;
+			PLAYER_TWO_VELOCITY = 7;
 			playerOne.setColor(Color.BLACK);
 			playerTwo.setColor(Color.BLACK);
 			bonusMessage = "";
@@ -354,37 +401,36 @@ public class Game extends JPanel {
 			
 			// move player one			
 			if (e.getKeyCode() == KeyEvent.VK_W) {
-				playerOne.setVY(-PLAYER_ONE_VELOCITY);
-				playerOne.movePlayer();
+				//playerOne.setVY(-PLAYER_ONE_VELOCITY);
+				//playerOne.movePlayer();
+				keyEventContainerOneXY = 10;
+				moveOne = 0;
+				upOrDownOne = 1;
 			} 
 			else if (e.getKeyCode() == KeyEvent.VK_S) {
-				playerOne.setVY(PLAYER_ONE_VELOCITY);
-				playerOne.movePlayer();
+				//playerOne.setVY(PLAYER_ONE_VELOCITY);
+				//playerOne.movePlayer();
+				keyEventContainerOneXY = 10;
+				moveOne = 0;
+				upOrDownOne = 2;
 			}
 			
 			// move player two
 			if (e.getKeyCode() == KeyEvent.VK_O) {
-				playerTwo.setVY(-PLAYER_TWO_VELOCITY);
-				playerTwo.movePlayer();
+				//playerTwo.setVY(-PLAYER_TWO_VELOCITY);
+				//playerTwo.movePlayer();
+				keyEventContainerTwoXY = 10;
+				moveTwo = 0;
+				upOrDownTwo = 1;
 			} 
 			else if (e.getKeyCode() == KeyEvent.VK_L) {
-				playerTwo.setVY(PLAYER_TWO_VELOCITY);
-				playerTwo.movePlayer();
+				//playerTwo.setVY(PLAYER_TWO_VELOCITY);
+				//playerTwo.movePlayer();
+				keyEventContainerTwoXY = 10;
+				moveTwo = 0;
+				upOrDownTwo = 2;
 			}
 		
-			// check position limitations for the 2 players
-			if (playerOne.getY() < 0) {
-				playerOne.setY(0);				
-			} 
-			else if (playerTwo.getY() < 0) {
-				playerTwo.setY(0);				
-			}
-			else if (playerOne.getY() > getHeight() - playerOne.getHeight()) {
-				playerOne.setY(getHeight() - playerOne.getHeight());				
-			}
-			else if (playerTwo.getY() > getHeight() - playerTwo.getHeight()) {
-				playerTwo.setY(getHeight() - playerTwo.getHeight());				
-			}
 		}
 	
 

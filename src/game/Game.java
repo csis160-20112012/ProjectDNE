@@ -33,12 +33,13 @@ public class Game extends JPanel {
 	
 	// ball constants and object
 	private static final int Y_VELOCITY = 1;
-	private static final int X_VELOCITY = 15;
-	private Ball ball = new Ball(200, 0, X_VELOCITY, Y_VELOCITY, 10, 10);
+	private static final int X_VELOCITY = 5;
+	private Ball ball = new Ball(200, 200, X_VELOCITY, Y_VELOCITY, 10, 10);
 	
 	
 	// player one and two constants and objects
-	private static final int PLAYER_VY = 30;
+	private int PLAYER_ONE_VELOCITY = 30;
+	private int PLAYER_TWO_VELOCITY = 30;
 	private static final int PLAYERONE_X = 40;
 	private static final int PLAYERONE_Y = 250;
 	private static final int PLAYERTWO_X = 1150; //remember to change
@@ -47,15 +48,26 @@ public class Game extends JPanel {
 	private Player playerOne = new Player(PLAYERONE_X, PLAYERONE_Y, 0, 0);
 	private Player playerTwo = new Player(PLAYERTWO_X, PLAYERTWO_Y, 0, 0);
 	
+	private int lastPlayer = 1;
+	
 	
 	// player one and player two score
 	private int scoreOne = 0;
 	private int scoreTwo = 0;
+	
+	
+	// initialize bonus object + number of hits
+	private Bonus bonus = new Bonus(0, 0, Color.WHITE, 0, true);
+	private Random randomizeBonus = new Random();
+	
+	private String bonusMessage = "";
+	private Color messageColor = new Color (173, 255, 47);
+	private int hitsWithPlayers = 1;
 
 	
 	// game status values
 	public enum GameStatus { 
-		MENU, MATCH, RESETBALL
+		MENU, MATCH, RESET
 	}
 	
 	private GameStatus gameStatus = GameStatus.MENU;
@@ -131,6 +143,9 @@ public class Game extends JPanel {
 					ball.setVY(ball.getVY() + directionRandomizer);
 					ball.setVX(-ball.getVX());
 					Toolkit.getDefaultToolkit().beep();
+					
+					lastPlayer = 1;					
+					hitsWithPlayers++;
 				}
 
 			
@@ -143,7 +158,70 @@ public class Game extends JPanel {
 					ball.setVY(ball.getVY() + directionRandomizer);
 					ball.setVX(-ball.getVX());
 					Toolkit.getDefaultToolkit().beep();
+					
+					lastPlayer = 2;
+					hitsWithPlayers++;
 				}
+				
+				
+				// generate new bonus
+				if (hitsWithPlayers % 5 == 0 && bonus.getIsHitted() == true) {
+					bonus.setX(randomizeBonus.nextInt(400) + 400);
+					bonus.setY(randomizeBonus.nextInt(400) + 100);
+					bonus.setType(randomizeBonus.nextInt(3) + 1);
+					bonus.setIsHitted(false);
+				}
+				
+				// check collision with the bonus
+				int whichPlayer = 0;
+				
+				if (bonus.getIsHitted() == false) {
+					if (	bonus.contains(ball.getX(), ballminY)
+						|| 	bonus.contains(ball.getX(), ballmaxY)
+						|| 	bonus.contains(ballminX, ball.getY())
+						|| 	bonus.contains(ballmaxX, ball.getY())) {
+							bonus.setIsHitted(true);
+							whichPlayer = lastPlayer;
+					}
+				}
+				
+				// player dimensions bonus
+				if (bonus.getType() == 1 && bonus.getIsHitted() == true) {
+					if (whichPlayer == 1) {
+						playerOne.setHeight(200);
+						bonusMessage = "Wow Player One, you look bigger!";
+					}
+					if (whichPlayer == 2) {
+						playerTwo.setHeight(200);
+						bonusMessage = "Wow Player Two, you look bigger!";
+					}
+				}
+				
+				// player velocity bonus
+				if (bonus.getType() == 2 && bonus.getIsHitted() == true) {
+					if (whichPlayer == 1) {
+						PLAYER_ONE_VELOCITY = 60;
+						bonusMessage = "Player One is now faster!";
+					}
+					if (whichPlayer == 2) {
+						PLAYER_TWO_VELOCITY = 60;
+						bonusMessage = "Player Two is now faster!";
+					}
+				}
+				
+				// player color bonus
+				if (bonus.getType() == 3 && bonus.getIsHitted() == true) {
+					Color invisible = new Color(72, 118, 255);
+					if (whichPlayer == 1) {
+						playerTwo.setColor(invisible);
+						bonusMessage = "Ops ops, Player Two seems to have some problems...";
+					}
+					if (whichPlayer == 2) {
+						playerOne.setColor(invisible);
+						bonusMessage = "Ops ops, Player One seems to have some problems...";
+					}
+				}
+				
 
 				repaint();
 			}
@@ -184,18 +262,18 @@ public class Game extends JPanel {
 				g.setFont(new Font ("Monospaced", Font.BOLD,24));
 				g.setColor(Color.BLACK);
 				g.drawString("Player one scored!", 200, getHeight() / 2);
-				g.drawString("Press ENTER to play again (attention player one).", 200, getHeight() / 2 + 50);
+				g.drawString("Press ENTER to play again (attention player two).", 200, getHeight() / 2 + 50);
 				
-				gameStatus = GameStatus.RESETBALL;
+				gameStatus = GameStatus.RESET;
 				scoreOne++;
 			} 
 			else if (ball.getX() < 0 + 15) {
-				g.setFont(new Font ("Monospaced",Font.BOLD,24));
+				g.setFont(new Font ("Monospaced", Font.BOLD,24));
 				g.setColor(Color.BLACK);
 				g.drawString("Player two scored!", 200, getHeight() / 2);
-				g.drawString("Press ENTER to play again (attention player two).", 200, getHeight() / 2 + 50);
+				g.drawString("Press ENTER to play again (attention player one).", 200, getHeight() / 2 + 50);
 				
-				gameStatus = GameStatus.RESETBALL;
+				gameStatus = GameStatus.RESET;
 				scoreTwo++;
 			} else {
 				g.setColor(Color.RED);		
@@ -207,22 +285,39 @@ public class Game extends JPanel {
 				g.setColor(Color.ORANGE);
 				g.setFont(new Font ("Monospaced", Font.BOLD, 30));
 				g.drawString("" + scoreOne, 10, 25);
-				g.drawString("" + scoreTwo, getWidth() - 20, 25);
+				g.drawString("" + scoreTwo, getWidth() - 30, 25);
+				
+				if (bonus.getIsHitted() == false)
+					bonus.paint(g);
+				g.setFont(new Font ("Monospaced", Font.BOLD, 20));
+				g.setColor(messageColor);
+				g.drawString(bonusMessage, 350, 20);
 			}
 		}
 		
 		
 		// reset ball position
-		if (gameStatus == GameStatus.RESETBALL && ball.getVX() < 0) {
+		if (gameStatus == GameStatus.RESET && ball.getVX() < 0) {
 			ball.setX(getWidth() / 2 + 400);
 			ball.setY(getHeight() / 2);
 			ball.setVY(1);
 		}
 		
-		if (gameStatus == GameStatus.RESETBALL && ball.getVX() > 0) {
+		if (gameStatus == GameStatus.RESET && ball.getVX() > 0) {
 			ball.setX(getWidth() / 2 - 400);
 			ball.setY(getHeight() / 2);
 			ball.setVY(1);
+		}
+		
+		// reset default elements values
+		if (gameStatus == GameStatus.RESET) {
+			playerOne.setHeight(100);
+			playerTwo.setHeight(100);
+			PLAYER_ONE_VELOCITY = 30;
+			PLAYER_TWO_VELOCITY = 30;
+			playerOne.setColor(Color.BLACK);
+			playerTwo.setColor(Color.BLACK);
+			bonusMessage = "";
 		}
 	}
 	
@@ -244,21 +339,21 @@ public class Game extends JPanel {
 			
 			// move player one			
 			if (e.getKeyCode() == KeyEvent.VK_W) {
-				playerOne.setVY(-PLAYER_VY);
+				playerOne.setVY(-PLAYER_ONE_VELOCITY);
 				playerOne.movePlayer();
 			} 
 			else if (e.getKeyCode() == KeyEvent.VK_S) {
-				playerOne.setVY(PLAYER_VY);
+				playerOne.setVY(PLAYER_ONE_VELOCITY);
 				playerOne.movePlayer();
 			}
 			
 			// move player two
 			if (e.getKeyCode() == KeyEvent.VK_O) {
-				playerTwo.setVY(-PLAYER_VY);
+				playerTwo.setVY(-PLAYER_TWO_VELOCITY);
 				playerTwo.movePlayer();
 			} 
 			else if (e.getKeyCode() == KeyEvent.VK_L) {
-				playerTwo.setVY(PLAYER_VY);
+				playerTwo.setVY(PLAYER_TWO_VELOCITY);
 				playerTwo.movePlayer();
 			}
 		

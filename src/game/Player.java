@@ -109,6 +109,10 @@ public class Player {
 	public int getHeight() {
 		return height;
 	}
+	
+	public Color getColor() {
+		return color;
+	}
 
 	
 	
@@ -137,6 +141,10 @@ public class Player {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	

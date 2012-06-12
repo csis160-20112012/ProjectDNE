@@ -13,35 +13,40 @@ public class Bonus {
 	private int y;
 
 	// dimensions of the bonus
-	private int width = 15;
-	private int height = 15;
+	private int width = 100;
+	private int height = 100;
 	
 	// color of the bonus
 	private Color color;
 	
-	// visibility of the bonus
-	private boolean isVisible = false;
+	// bonus type
+	private int type;
+	
+	// if the player hits the bonus the variable is set to true
+	private boolean isHitted = true;
 	
 	
 	
 	
 	
 	// default constructor
-	public Bonus(int x, int y, Color color, int width, int height, boolean isVisible) {
+	public Bonus(int x, int y, Color color, int width, int height, int type, boolean isHitted) {
 		this.x = x;
 		this.y = y;
 		this.color = color;
 		this.width = width;
 		this.height = height;
-		this.isVisible = isVisible;
+		this.type = type;
+		this.isHitted = isHitted;
 	}
 	
 	// constructor with no dimension values
-	public Bonus(int x, int y, Color color, boolean isVisible) {
+	public Bonus(int x, int y, Color color, int type, boolean isHitted) {
 		this.x = x;
 		this.y = y;
 		this.color = color;
-		this.isVisible = isVisible;
+		this.type = type;
+		this.isHitted = isHitted;
 	}
 	
 	
@@ -51,7 +56,24 @@ public class Bonus {
 	// paint bonus
 	public void paint(Graphics g) {
 		g.setColor(color);
-		g.fillOval(x, y, width, height);
+		g.fillRect(x, y, width, height);
+	}
+	
+	
+	
+	
+	
+	// used to check collision with the bonus
+	public boolean contains(int x, int y) {
+		int offsetX = x - getX();
+		int offsetY = y - getY();
+
+		if (offsetX >= 0 && offsetX <= width && offsetY >= 0
+				&& offsetY <= height) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	
@@ -79,9 +101,14 @@ public class Bonus {
 		return color;
 	}
 	
-	public boolean getVisibility() {
-		return isVisible;
+	public int getType() {
+		return type;
 	}
+	
+	public boolean getIsHitted() {
+		return isHitted;
+	}
+
 	
 	
 	
@@ -108,8 +135,12 @@ public class Bonus {
 		this.color = color;
 	}
 	
-	public void setVisibility(boolean isVisible) {
-		this.isVisible = isVisible;
+	public void setType(int type) {
+		this.type = type;
+	}
+		
+	public void setIsHitted(boolean isHitted) {
+		this.isHitted = isHitted;
 	}
 	
 	

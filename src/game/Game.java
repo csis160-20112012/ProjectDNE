@@ -152,8 +152,10 @@ public class Game extends JPanel {
 				}
 
 			
-				Random ballDirectionRandomizer = new Random();
-				int directionRandomizer = ballDirectionRandomizer.nextInt(10) - 5; 
+				Random ballDirectionRandomizerPos = new Random();
+				Random ballDirectionRandomizerNeg = new Random();
+				int directionRandomizerPos = ballDirectionRandomizerPos.nextInt(7) + 1;				//generate number in the range 1/7
+				int directionRandomizerNeg = ballDirectionRandomizerNeg.nextInt(7) - 7; 			//generate number in the range -1/-7
 			
 			
 				// check collision with player one
@@ -161,8 +163,13 @@ public class Game extends JPanel {
 					|| 	playerOne.contains(ball.getX(), ballmaxY)
 					|| 	playerOne.contains(ballminX, ball.getY())
 					|| 	playerOne.contains(ballmaxX, ball.getY())) {
-				
-					ball.setVY(ball.getVY() + directionRandomizer);
+					
+					if (ball.getVY() > 0) {
+						ball.setVY(directionRandomizerPos);
+					} else {
+						ball.setVY(directionRandomizerNeg);
+					}
+					
 					ball.setVX(-ball.getVX());
 					Toolkit.getDefaultToolkit().beep();
 					
@@ -177,7 +184,12 @@ public class Game extends JPanel {
 					||	playerTwo.contains(ballminX, ball.getY())
 					|| 	playerTwo.contains(ballmaxX, ball.getY())) {
 				
-					ball.setVY(ball.getVY() + directionRandomizer);
+					if (ball.getVY() > 0) {
+						ball.setVY(directionRandomizerPos);
+					} else {
+						ball.setVY(directionRandomizerNeg);
+					}
+					
 					ball.setVX(-ball.getVX());
 					Toolkit.getDefaultToolkit().beep();
 					
